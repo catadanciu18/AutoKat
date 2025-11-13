@@ -1,0 +1,149 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Coș cumpărături - AutoKat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen flex flex-col">
+
+<!-- NAVBAR -->
+<header class="bg-white shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a th:href="@{/catalog}" class="flex items-center gap-2">
+            <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-white font-bold text-lg">A</span>
+            <span class="text-xl font-semibold text-slate-800">AutoKat</span>
+        </a>
+
+        <nav class="flex items-center gap-4 text-sm">
+            <a th:href="@{/catalog}" class="text-slate-700 hover:text-blue-600">Catalog</a>
+            <a th:href="@{/cart}" class="text-slate-700 hover:text-blue-600 font-semibold">Coș</a>
+
+            <div sec:authorize="isAuthenticated()">
+                <a th:href="@{/logout}"
+                   class="px-3 py-1 rounded-full bg-slate-900 text-white text-xs hover:bg-slate-800">
+                    Logout
+                </a>
+            </div>
+            <div sec:authorize="isAnonymous()">
+                <a th:href="@{/login}" class="text-slate-700 hover:text-blue-600">Login</a>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main class="flex-1 max-w-6xl mx-auto px-4 py-8">
+
+    <h1 class="text-3xl font-bold text-slate-900 mb-6">Coș de cumpărături</h1>
+
+    <!-- Dacă coșul e gol -->
+    <div th:if="${#lists.isEmpty(cartItems)}"
+         class="bg-yellow-50 border border-yellow-200 text-yellow-800 px-4 py-3 rounded text-sm">
+        Coșul tău este gol.
+        <a th:href="@{/catalog}" class="text-blue-600 underline">Vezi catalog</a>
+    </div>
+
+    <!-- Coș cu produse -->
+    <div th:if="${!#lists.isEmpty(cartItems)}" class="grid md:grid-cols-3 gap-6">
+
+        <!-- LISTA PRODUSE -->
+        <section class="md:col-span-2 space-y-4">
+            <div th:each="item : ${cartItems}"
+                 class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 flex items-start justify-between gap-5 hover:shadow-md transition">
+
+                <div class="flex-1">
+                    <h2 class="text-lg font-semibold text-slate-900 mb-1"
+                        th:text="${item.product.name}">
+                        Nume produs
+                    </h2>
+
+                    <p class="text-sm text-slate-600 mb-1">
+                        Brand:
+                        <span th:text="${item.product.brand}">Brand</span>
+                    </p>
+
+                    <p class="text-sm text-slate-600 mb-3">
+                        Preț unitar:
+                        <span class="font-medium text-emerald-700"
+                              th:text="${item.product.price} + ' RON'">0 RON</span>
+                    </p>
+
+                    <!-- Cantitate -->
+                    <div class="flex items-center gap-3">
+                        <form th:action="@{|/cart/update/${item.product.id}|}" method="post" class="flex items-center gap-2">
+                            <button name="action" value="minus"
+                                    class="h-7 w-7 rounded-full bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold">
+                                -
+                            </button>
+                            <span class="px-3 py-1 rounded-xl bg-slate-100 text-slate-800 text-sm"
+                                  th:text="${item.quantity}">
+                                1
+                            </span>
+                            <button name="action" value="plus"
+                                    class="h-7 w-7 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-bold">
+                                +
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- TOTAL produs -->
+                <div class="text-right">
+                    <p class="text-xs text-slate-500 mb-1">Total</p>
+                    <p class="text-lg font-bold text-emerald-600 mb-3"
+                       th:text="${item.total} + ' RON'">
+                        0.00 RON
+                    </p>
+
+                    <!-- Remove -->
+                    <form th:action="@{|/cart/remove/${item.product.id}|}" method="post">
+                        <button type="submit"
+                                class="text-red-600 text-xs hover:underline"
+                                onclick="return confirm('Elimini produsul din coș?');">
+                            Elimină
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- REZUMAT -->
+        <aside class="bg-white rounded-2xl shadow-sm border border-slate-100 p-6 h-fit">
+            <h3 class="text-xl font-bold text-slate-900 mb-4">Sumar comandă</h3>
+
+            <div class="space-y-2 text-sm text-slate-700">
+                <div class="flex justify-between">
+                    <span>Produse:</span>
+                    <span th:text="${cartItems.size()}">0</span>
+                </div>
+
+                <div class="flex justify-between font-semibold text-slate-900 text-lg pt-2 border-t">
+                    <span>Total:</span>
+                    <span th:text="${totalAmount} + ' RON'">0 RON</span>
+                </div>
+            </div>
+
+            <!-- Finalizează comanda -->
+            <form th:action="@{/checkout}" method="post" class="mt-6">
+                <button type="submit"
+                        class="w-full inline-flex items-center justify-center px-4 py-2.5 rounded-xl bg-blue-600 text-white text-sm font-medium hover:bg-blue-500">
+                    Finalizează comanda
+                </button>
+            </form>
+        </aside>
+
+    </div>
+
+</main>
+
+<footer class="border-t bg-white">
+    <div class="max-w-6xl mx-auto px-4 py-4 text-xs text-slate-500 flex justify-between">
+        <span>© [[${#dates.format(#dates.createNow(), 'yyyy')}]] AutoKat</span>
+        <span>Coș cumpărături</span>
+    </div>
+</footer>
+
+</body>
+</html>
