@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 @Service
-@SessionScope     // fiecare user are propriul coș
+@SessionScope
 @RequiredArgsConstructor
 public class CartService {
 

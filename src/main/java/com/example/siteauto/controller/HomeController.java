@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HomeController {
 
-    // fie schimbi ruta:
+
     @GetMapping("/home")
     public String home() {
-        return "index"; // dacă ai index.html
+        return "index";
     }
 }

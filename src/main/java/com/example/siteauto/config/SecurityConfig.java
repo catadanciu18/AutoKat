@@ -23,7 +23,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // userii vin din DB
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepo.findByUsername(username)

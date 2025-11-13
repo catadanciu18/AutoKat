@@ -16,10 +16,10 @@ public class UserAccount {
     private String username;
 
     @Column(nullable = false)
-    private String password;  // va fi criptată
+    private String password;
 
     @Column(nullable = false)
-    private String role;      // "ROLE_USER" sau "ROLE_ADMIN"
+    private String role;
 
     private boolean enabled = true;
 }

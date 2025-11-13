@@ -13,20 +13,17 @@ public class CatalogController {
 
     private final ProductRepository productRepo;
 
-    // Home -> redirecționează la catalog
     @GetMapping("/")
     public String home() {
         return "redirect:/catalog";
     }
 
-    // Catalog public
     @GetMapping("/catalog")
     public String catalog(Model model) {
         model.addAttribute("products", productRepo.findByActiveTrue());
         return "catalog"; // templates/catalog.html
     }
 
-    // Detalii produs
     @GetMapping("/product/{id}")
     public String productDetails(@PathVariable Long id, Model model) {
         var product = productRepo.findById(id)

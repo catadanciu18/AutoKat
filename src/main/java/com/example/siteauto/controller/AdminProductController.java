@@ -14,14 +14,12 @@ public class AdminProductController {
 
     private final ProductRepository productRepo;
 
-    // LISTĂ PRODUSE
     @GetMapping
     public String list(Model model) {
         model.addAttribute("products", productRepo.findAll());
         return "admin/products"; // templates/admin/products.html
     }
 
-    // FORM ÎNREGISTRARE PRODUS NOU
     @GetMapping("/new")
     public String createForm(Model model) {
         model.addAttribute("product", new Product());
@@ -29,7 +27,6 @@ public class AdminProductController {
         return "admin/product-form"; // templates/admin/product-form.html
     }
 
-    // FORM EDITARE PRODUS EXISTENT
     @GetMapping("/edit/{id}")
     public String editForm(@PathVariable Long id, Model model) {
         var product = productRepo.findById(id)
@@ -39,7 +36,6 @@ public class AdminProductController {
         return "admin/product-form";
     }
 
-    // SALVARE (create + update)
     @PostMapping("/save")
     public String save(@ModelAttribute Product product) {
         // dacă stock e null, punem 0 ca să nu se supere DB
@@ -50,7 +46,6 @@ public class AdminProductController {
         return "redirect:/admin/products";
     }
 
-    // ȘTERGERE PRODUS
     @PostMapping("/delete/{id}")
     public String delete(@PathVariable Long id) {
         productRepo.deleteById(id);
