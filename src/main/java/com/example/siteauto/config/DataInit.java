@@ -1,18 +1,23 @@
 package com.example.siteauto.config;
 
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
 import com.example.siteauto.model.UserAccount;
 import com.example.siteauto.repository.UserAccountRepository;
-import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Component
-@RequiredArgsConstructor
 public class DataInit implements CommandLineRunner {
 
     private final UserAccountRepository userRepo;
     private final PasswordEncoder encoder;
+
+
+    public DataInit(UserAccountRepository userRepo, PasswordEncoder encoder) {
+        this.userRepo = userRepo;
+        this.encoder = encoder;
+    }
 
     @Override
     public void run(String... args) {

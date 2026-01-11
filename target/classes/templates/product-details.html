@@ -1,0 +1,74 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${product.name} + ' - AutoKat'">Produs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen">
+
+<header class="bg-white shadow-sm">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+        <a th:href="@{/catalog}" class="text-xl font-semibold text-slate-800">
+            AutoKat
+        </a>
+
+        <form th:action="@{/logout}" method="post"
+              th:if="${#authorization.expression('isAuthenticated()')}"
+              class="inline">
+            <button class="px-3 py-1 rounded-full bg-slate-900 text-white text-xs">
+                Logout
+            </button>
+        </form>
+    </div>
+</header>
+
+<main class="max-w-4xl mx-auto px-4 py-10">
+
+    <div class="bg-white rounded-2xl shadow-sm p-6 grid md:grid-cols-2 gap-6">
+
+        <div>
+            <span class="inline-block bg-blue-50 text-blue-700 text-xs px-3 py-1 rounded-full mb-2"
+                  th:text="${product.category}">
+                Categorie
+            </span>
+
+            <h1 class="text-2xl font-bold text-slate-900 mb-2"
+                th:text="${product.name}">
+                Nume produs
+            </h1>
+
+            <p class="text-sm text-slate-600 mb-2">
+                Brand: <span th:text="${product.brand}">Brand</span>
+            </p>
+
+            <p class="text-sm text-slate-600 mb-4">
+                Stoc: <span th:text="${product.stock}">0</span> bucăți
+            </p>
+
+            <p class="text-3xl font-bold text-emerald-600 mb-6"
+               th:text="${#numbers.formatDecimal(product.price,1,2)} + ' RON'">
+                0.00 RON
+            </p>
+
+            <form th:action="@{|/cart/add/${product.id}|}" method="post"
+                  th:if="${#authorization.expression('isAuthenticated()')}">
+                <button type="submit"
+                        class="px-6 py-3 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-500">
+                    Adaugă în coș
+                </button>
+            </form>
+
+            <p th:if="${#authorization.expression('!isAuthenticated()')}"
+               class="text-sm text-slate-500">
+                Autentifică-te pentru a adăuga produse în coș.
+            </p>
+        </div>
+
+    </div>
+
+</main>
+
+</body>
+</html>

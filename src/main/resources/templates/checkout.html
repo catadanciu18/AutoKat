@@ -1,0 +1,48 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout - AutoKat</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-100 min-h-screen flex items-center justify-center">
+
+<div class="bg-white rounded-2xl shadow-sm p-8 max-w-md w-full">
+
+    <h1 class="text-2xl font-bold text-slate-900 mb-4 text-center">
+        Finalizare comandă
+    </h1>
+
+    <div class="bg-slate-50 rounded-xl p-4 mb-6 space-y-2 text-sm">
+        <div class="flex justify-between">
+            <span class="text-slate-600">Produse în coș</span>
+            <span class="font-medium" th:text="${itemsCount}">0</span>
+        </div>
+        <div class="flex justify-between">
+            <span class="text-slate-600">Total de plată</span>
+            <span class="font-semibold text-emerald-600"
+                  th:text="${#numbers.formatDecimal(totalAmount,1,2)} + ' RON'">
+                0.00 RON
+            </span>
+        </div>
+    </div>
+
+    <div class="text-center mb-6">
+        <p class="text-slate-600 text-sm">
+            Finalizarea comenzii este momentan
+            <span class="font-semibold">în lucru</span>.
+        </p>
+    </div>
+
+    <div class="flex justify-center">
+        <a th:href="@{/cart}"
+           class="px-6 py-2 rounded-full bg-blue-600 text-white font-medium hover:bg-blue-500">
+            Înapoi la coș
+        </a>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,17 +1,19 @@
 package com.example.siteauto.controller;
 
-import com.example.siteauto.repository.ProductRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+
+import com.example.siteauto.repository.ProductRepository;
 
 @Controller
-@RequiredArgsConstructor
 public class CatalogController {
 
     private final ProductRepository productRepo;
+
+    public CatalogController(ProductRepository productRepo) {
+        this.productRepo = productRepo;
+    }
 
     @GetMapping("/")
     public String home() {
@@ -21,14 +23,6 @@ public class CatalogController {
     @GetMapping("/catalog")
     public String catalog(Model model) {
         model.addAttribute("products", productRepo.findByActiveTrue());
-        return "catalog"; // templates/catalog.html
-    }
-
-    @GetMapping("/product/{id}")
-    public String productDetails(@PathVariable Long id, Model model) {
-        var product = productRepo.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Produs inexistent"));
-        model.addAttribute("product", product);
-        return "product"; // templates/product.html
+        return "catalog"; 
     }
 }
